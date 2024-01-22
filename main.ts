@@ -1,5 +1,45 @@
+namespace SpriteKind {
+    export const OtherPlayer = SpriteKind.create()
+}
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile1`, function (sprite, location) {
     game.gameOver(true)
+})
+sprites.onOverlap(SpriteKind.OtherPlayer, SpriteKind.Food, function (sprite, otherSprite) {
+    ListValue = list._pickRandom()
+    if (ListValue == 1) {
+        sprites.destroy(otherSprite, effects.confetti, 500)
+        music.play(music.melodyPlayable(music.powerUp), music.PlaybackMode.UntilDone)
+        info.changeScoreBy(1)
+        info.changeLifeBy(10)
+        info.player2.changeLifeBy(10)
+    }
+    if (ListValue == 2) {
+        sprites.destroy(otherSprite, effects.halo, 500)
+        music.play(music.melodyPlayable(music.powerUp), music.PlaybackMode.UntilDone)
+        info.changeScoreBy(1)
+        info.changeLifeBy(25)
+        info.player2.changeLifeBy(25)
+    }
+    if (ListValue == 3) {
+        sprites.destroy(otherSprite, effects.coolRadial, 500)
+        music.play(music.melodyPlayable(music.powerUp), music.PlaybackMode.UntilDone)
+        info.changeScoreBy(1)
+        info.changeLifeBy(50)
+        info.player2.changeLifeBy(50)
+    }
+    if (ListValue == 4) {
+        sprites.destroy(otherSprite, effects.warmRadial, 500)
+        music.play(music.melodyPlayable(music.powerUp), music.PlaybackMode.UntilDone)
+        info.changeScoreBy(1)
+        info.changeLifeBy(100)
+        info.player2.changeLifeBy(100)
+    }
+    if (ListValue == 5) {
+        sprites.destroy(otherSprite, effects.rings, 500)
+        music.play(music.melodyPlayable(music.powerUp), music.PlaybackMode.UntilDone)
+        info.changeScoreBy(1)
+        sprites.destroyAllSpritesOfKind(SpriteKind.Enemy, effects.fire, 500)
+    }
 })
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     animation.runImageAnimation(
@@ -64,8 +104,8 @@ controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
 info.onScore(11, function () {
     tiles.setCurrentTilemap(tilemap`level19`)
 })
-controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
-    EnemySpawn()
+sprites.onOverlap(SpriteKind.Enemy, SpriteKind.OtherPlayer, function (sprite, otherSprite) {
+    info.player2.changeLifeBy(-1)
 })
 controller.player2.onButtonEvent(ControllerButton.Down, ControllerButtonEvent.Pressed, function () {
     animation.runImageAnimation(
@@ -126,6 +166,9 @@ controller.player2.onButtonEvent(ControllerButton.Down, ControllerButtonEvent.Pr
     true
     )
     Direction2 = 1
+})
+scene.onOverlapTile(SpriteKind.OtherPlayer, assets.tile`myTile1`, function (sprite, location) {
+    game.gameOver(true)
 })
 function Animation () {
     moving = controller.right.isPressed() || (controller.left.isPressed() || (controller.up.isPressed() || controller.down.isPressed()))
@@ -256,7 +299,7 @@ function Animation () {
             . . . . . 1 1 . 1 1 . . . . . . 
             . . . . . f f . f f . . . . . . 
             `],
-        200,
+        100,
         false
         )
     }
@@ -282,7 +325,7 @@ function Animation () {
             . . . . . 1 1 . 1 1 . . . . . . 
             . . . . . f f . f f . . . . . . 
             `],
-        200,
+        100,
         false
         )
     }
@@ -588,6 +631,9 @@ controller.player2.onButtonEvent(ControllerButton.Right, ControllerButtonEvent.P
 info.onScore(1, function () {
     tiles.setCurrentTilemap(tilemap`level1`)
 })
+sprites.onOverlap(SpriteKind.Enemy, SpriteKind.Player, function (sprite, otherSprite) {
+    info.changeLifeBy(-1)
+})
 controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
     animation.runImageAnimation(
     Player_1,
@@ -650,6 +696,9 @@ controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
 })
 info.onScore(3, function () {
     tiles.setCurrentTilemap(tilemap`level8`)
+})
+info.onLifeZero(function () {
+    game.gameOver(false)
 })
 controller.player2.onButtonEvent(ControllerButton.Left, ControllerButtonEvent.Pressed, function () {
     animation.runImageAnimation(
@@ -926,38 +975,41 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSpr
     ListValue = list._pickRandom()
     if (ListValue == 1) {
         sprites.destroy(otherSprite, effects.confetti, 500)
-        music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.UntilDone)
+        music.play(music.melodyPlayable(music.powerUp), music.PlaybackMode.UntilDone)
         info.changeScoreBy(1)
         info.changeLifeBy(10)
         info.player2.changeLifeBy(10)
     }
     if (ListValue == 2) {
         sprites.destroy(otherSprite, effects.halo, 500)
-        music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.UntilDone)
+        music.play(music.melodyPlayable(music.powerUp), music.PlaybackMode.UntilDone)
         info.changeScoreBy(1)
         info.changeLifeBy(25)
         info.player2.changeLifeBy(25)
     }
     if (ListValue == 3) {
         sprites.destroy(otherSprite, effects.coolRadial, 500)
-        music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.UntilDone)
+        music.play(music.melodyPlayable(music.powerUp), music.PlaybackMode.UntilDone)
         info.changeScoreBy(1)
         info.changeLifeBy(50)
         info.player2.changeLifeBy(50)
     }
     if (ListValue == 4) {
         sprites.destroy(otherSprite, effects.warmRadial, 500)
-        music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.UntilDone)
+        music.play(music.melodyPlayable(music.powerUp), music.PlaybackMode.UntilDone)
         info.changeScoreBy(1)
         info.changeLifeBy(100)
         info.player2.changeLifeBy(100)
     }
     if (ListValue == 5) {
         sprites.destroy(otherSprite, effects.rings, 500)
-        music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.UntilDone)
+        music.play(music.melodyPlayable(music.powerUp), music.PlaybackMode.UntilDone)
         info.changeScoreBy(1)
-        sprites.destroyAllSpritesOfKind(SpriteKind.Enemy)
+        sprites.destroyAllSpritesOfKind(SpriteKind.Enemy, effects.fire, 500)
     }
+})
+info.player2.onLifeZero(function () {
+    game.gameOver(false)
 })
 info.onScore(5, function () {
     tiles.setCurrentTilemap(tilemap`level10`)
@@ -970,11 +1022,17 @@ function EnemySpawn () {
     for (let index = 0; index < 5; index++) {
         EnemySprite = sprites.create(EnemyList._pickRandom(), SpriteKind.Enemy)
         tiles.placeOnTile(EnemySprite, SpawnLocation.removeAt(randint(0, SpawnLocation.length - 1)))
+        TargetPlayer = TargetList._pickRandom()
+        if (TargetPlayer == 1) {
+            EnemySprite.follow(Player_1, randint(40, 50))
+        } else {
+            EnemySprite.follow(Player_2, randint(40, 50))
+        }
     }
 }
+let TargetPlayer = 0
 let EnemySprite: Sprite = null
 let SpawnLocation: tiles.Location[] = []
-let ListValue = 0
 let Power_Up_11: Sprite = null
 let Power_Up_10: Sprite = null
 let Power_Up_9: Sprite = null
@@ -990,6 +1048,8 @@ let moving2 = false
 let moving = false
 let Direction2 = 0
 let Direction1 = 0
+let ListValue = 0
+let TargetList: number[] = []
 let EnemyList: Image[] = []
 let list: number[] = []
 let Player_2: Sprite = null
@@ -1031,9 +1091,9 @@ Player_2 = sprites.create(img`
     . . . . . f f . f f . . . . . . 
     . . . . . 1 1 . 1 1 . . . . . . 
     . . . . f f f . f f f . . . . . 
-    `, SpriteKind.Player)
+    `, SpriteKind.OtherPlayer)
 controller.moveSprite(Player_1, 90, 90)
-controller.player2.moveSprite(Player_2)
+controller.player2.moveSprite(Player_2, 100, 100)
 music.play(music.createSong(hex`001e000408020303001c0001dc00690000045e0100040000000000000000000005640001040003360000000400012004000800012508000c00011e0c001000012210001400011b14001800012218001c00011e1c002000012420002400012205001c000f0a006400f4010a0000040000000000000000000000000000000002060020002400011b06001c00010a006400f4016400000400000000000000000000000000000000021e0000000400011b08000c00011b10001400012518001c00012720002400011b`), music.PlaybackMode.LoopingInBackground)
 splitScreen.setSplitScreenEnabled(true)
 splitScreen.cameraFollowSprite(splitScreen.Camera.Camera1, Player_1)
@@ -1143,6 +1203,10 @@ img`
     . . . . f f f . f f f . . . . . 
     `
 ]
+TargetList = [1, 2]
 game.onUpdate(function () {
     Animation()
+})
+game.onUpdateInterval(5000, function () {
+    EnemySpawn()
 })
