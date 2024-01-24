@@ -1,5 +1,7 @@
 namespace SpriteKind {
     export const OtherPlayer = SpriteKind.create()
+    export const Boss = SpriteKind.create()
+    export const MyProjectiles = SpriteKind.create()
 }
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile1`, function (sprite, location) {
     game.gameOver(true)
@@ -106,6 +108,29 @@ info.onScore(11, function () {
 })
 sprites.onOverlap(SpriteKind.Enemy, SpriteKind.OtherPlayer, function (sprite, otherSprite) {
     info.player2.changeLifeBy(-1)
+})
+sprites.onOverlap(SpriteKind.MyProjectiles, SpriteKind.Enemy, function (sprite, otherSprite) {
+    sprites.destroy(otherSprite, effects.disintegrate, 500)
+    sprites.destroy(sprite, effects.ashes, 500)
+})
+sprites.onOverlap(SpriteKind.Boss, SpriteKind.Player, function (sprite, otherSprite) {
+    if (can_attack == 1) {
+        statusbar.value += -8
+    } else {
+        info.changeLifeBy(-2)
+    }
+})
+sprites.onCreated(SpriteKind.Boss, function (sprite) {
+    for (let index = 0; index < 10000; index++) {
+        timer.after(5000, function () {
+            BossTarget = BossTargetList._pickRandom()
+            if (BossTarget == 1) {
+                ZombieBoss.follow(Player_1, 42)
+            } else {
+                ZombieBoss.follow(Player_2, 42)
+            }
+        })
+    }
 })
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (can_attack == 0) {
@@ -398,7 +423,9 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     }
 })
 controller.player2.onButtonEvent(ControllerButton.A, ControllerButtonEvent.Pressed, function () {
-    ChainBall = sprites.createProjectileFromSprite(assets.image`myImage`, Player_2, randint(-50, 50), randint(-50, 50))
+    ChainBall = sprites.create(assets.image`myImage`, SpriteKind.MyProjectiles)
+    ChainBall.setVelocity(randint(-50, 50), randint(-50, 50))
+    ChainBall.setPosition(Player_2.x, Player_2.y)
 })
 controller.player2.onButtonEvent(ControllerButton.Down, ControllerButtonEvent.Pressed, function () {
     animation.runImageAnimation(
@@ -735,8 +762,50 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     )
     Direction1 = 2
 })
+scene.onHitWall(SpriteKind.MyProjectiles, function (sprite, location) {
+    sprites.destroy(sprite)
+})
 info.onScore(10, function () {
     tiles.setCurrentTilemap(tilemap`level22`)
+    ZombieBoss = sprites.create(img`
+        ........888888888888.....
+        ........888888888888.....
+        ......88888888888888.....
+        ......ff66ff6666666f.....
+        ......f66ff66fff666f.....
+        .....fff6666f111f66f.....
+        ....f111f666f1f1f66f.....
+        ....f1f1f666f111f66f.....
+        ....f111f6666fff66f......
+        .....fff6666666666f......
+        ......f6121216666f.......
+        ......ff22222266f8f......
+        ........f121266f888f.....
+        .......ffffffff5588f.....
+        .......f88888f855f88f....
+        .......f88888f888f88f....
+        ......f88888ff8888f88f...
+        ......f88888f88888f88f...
+        .......f8888f888888f88f..
+        .......f8888f888888f88f..
+        .......f8888f888888f8ff..
+        ......f66fffddfff8f666f..
+        .....f66ff8888888f6f6f6..
+        .....f6ff888ffff8886f6...
+        ......f2e88f....f88fff...
+        ......fe12f.....f88f.....
+        ......f212f......f66f....
+        ......f212ff......f66f...
+        ......feeeeef.....fffef..
+        ......feeeeeef...feeeef..
+        ......feeeeeef..feeeef...
+        .......ffffff...fffff....
+        `, SpriteKind.Boss)
+    tiles.placeOnTile(ZombieBoss, tiles.getTileLocation(50, 50))
+    statusbar = statusbars.create(20, 4, StatusBarKind.Health)
+    statusbar.value = 250
+    statusbar.attachToSprite(ZombieBoss)
+    statusbar.setColor(8, 10)
 })
 controller.player2.onButtonEvent(ControllerButton.Up, ControllerButtonEvent.Pressed, function () {
     animation.runImageAnimation(
@@ -797,6 +866,10 @@ controller.player2.onButtonEvent(ControllerButton.Up, ControllerButtonEvent.Pres
     true
     )
     Direction2 = 0
+})
+statusbars.onZero(StatusBarKind.Health, function (status) {
+    sprites.destroy(ZombieBoss, effects.blizzard, 500)
+    info.changeScoreBy(1)
 })
 info.onScore(7, function () {
     tiles.setCurrentTilemap(tilemap`level12`)
@@ -1064,6 +1137,13 @@ controller.player2.onButtonEvent(ControllerButton.Left, ControllerButtonEvent.Pr
 scene.onOverlapTile(SpriteKind.Enemy, assets.tile`transparency16`, function (sprite, location) {
     sprites.destroy(sprite)
 })
+sprites.onOverlap(SpriteKind.Boss, SpriteKind.OtherPlayer, function (sprite, otherSprite) {
+    info.player2.changeLifeBy(-1)
+})
+sprites.onOverlap(SpriteKind.MyProjectiles, SpriteKind.Boss, function (sprite, otherSprite) {
+    statusbar.value += -3
+    sprites.destroy(sprite, effects.ashes, 500)
+})
 function PowerUps () {
     Power_Up_1 = sprites.create(img`
         . . . . . . . . . . . . . . . . 
@@ -1255,25 +1335,6 @@ function PowerUps () {
         . . . . . . . . . . . . . . . . 
         `, SpriteKind.Food)
     tiles.placeOnTile(Power_Up_10, tiles.getTileLocation(18, 62))
-    Power_Up_11 = sprites.create(img`
-        . . . . . . . . . . . . . . . . 
-        . . . . . . 6 6 6 6 . . . . . . 
-        . . . . 6 6 6 5 5 6 6 6 . . . . 
-        . . . 7 7 7 7 6 6 6 6 6 6 . . . 
-        . . 6 7 7 7 7 8 8 8 1 1 6 6 . . 
-        . . 7 7 7 7 7 8 8 8 1 1 5 6 . . 
-        . 6 7 7 7 7 8 8 8 8 8 5 5 6 6 . 
-        . 6 7 7 7 8 8 8 6 6 6 6 5 6 6 . 
-        . 6 6 7 7 8 8 6 6 6 6 6 6 6 6 . 
-        . 6 8 7 7 8 8 6 6 6 6 6 6 6 6 . 
-        . . 6 8 7 7 8 6 6 6 6 6 8 6 . . 
-        . . 6 8 8 7 8 8 6 6 6 8 6 6 . . 
-        . . . 6 8 8 8 8 8 8 8 8 6 . . . 
-        . . . . 6 6 8 8 8 8 6 6 . . . . 
-        . . . . . . 6 6 6 6 . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        `, SpriteKind.Food)
-    tiles.placeOnTile(Power_Up_11, tiles.getTileLocation(52, 52))
 }
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSprite) {
     ListValue = list._pickRandom()
@@ -1325,9 +1386,6 @@ info.onScore(5, function () {
 info.onScore(8, function () {
     tiles.setCurrentTilemap(tilemap`level14`)
 })
-sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, otherSprite) {
-    sprites.destroy(otherSprite)
-})
 function EnemySpawn () {
     SpawnLocation = tiles.getTilesByType(sprites.dungeon.floorMixed)
     for (let index = 0; index < 5; index++) {
@@ -1344,7 +1402,6 @@ function EnemySpawn () {
 let TargetPlayer = 0
 let EnemySprite: Sprite = null
 let SpawnLocation: tiles.Location[] = []
-let Power_Up_11: Sprite = null
 let Power_Up_10: Sprite = null
 let Power_Up_9: Sprite = null
 let Power_Up_8: Sprite = null
@@ -1359,12 +1416,16 @@ let moving2 = false
 let moving = false
 let Direction2 = 0
 let ChainBall: Sprite = null
+let ZombieBoss: Sprite = null
+let BossTarget = 0
+let statusbar: StatusBarSprite = null
 let Direction1 = 0
 let ListValue = 0
 let can_attack = 0
 let TargetList: number[] = []
 let EnemyList: Image[] = []
 let list: number[] = []
+let BossTargetList: number[] = []
 let Player_2: Sprite = null
 let Player_1: Sprite = null
 game.splash("Breakout")
@@ -1419,6 +1480,7 @@ PowerUps()
 info.setLife(100)
 info.player2.setLife(100)
 info.setScore(0)
+BossTargetList = [1, 2]
 list = [
 1,
 2,
