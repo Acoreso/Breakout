@@ -492,9 +492,12 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     }
 })
 controller.player2.onButtonEvent(ControllerButton.A, ControllerButtonEvent.Pressed, function () {
-    ChainBall = sprites.create(assets.image`myImage`, SpriteKind.MyProjectiles)
-    ChainBall.setVelocity(randint(-50, 50), randint(-50, 50))
-    ChainBall.setPosition(Player_2.x, Player_2.y)
+    if (game.runtime() - prevPress >= TimeBetweenPress) {
+        ChainBall = sprites.create(assets.image`myImage`, SpriteKind.MyProjectiles)
+        ChainBall.setVelocity(randint(-50, 50), randint(-50, 50))
+        ChainBall.setPosition(Player_2.x, Player_2.y)
+        prevPress = game.runtime()
+    }
 })
 controller.player2.onButtonEvent(ControllerButton.Down, ControllerButtonEvent.Pressed, function () {
     animation.runImageAnimation(
@@ -1792,6 +1795,8 @@ let ChainBall: Sprite = null
 let statusbar: StatusBarSprite = null
 let Direction1 = 0
 let ListValue = 0
+let TimeBetweenPress = 0
+let prevPress = 0
 let can_attack = 0
 let TargetList: number[] = []
 let EnemyList: Image[] = []
@@ -1951,6 +1956,8 @@ img`
 ]
 TargetList = [1, 2]
 can_attack = 0
+prevPress = 0
+TimeBetweenPress = 200
 game.onUpdate(function () {
     Animation()
     if (sprites.allOfKind(SpriteKind.Boss).length > 0) {
