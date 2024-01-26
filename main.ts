@@ -1116,7 +1116,7 @@ info.onScore(10, function () {
     )
     tiles.placeOnTile(ZombieBoss, tiles.getTileLocation(50, 50))
     statusbar = statusbars.create(20, 4, StatusBarKind.Health)
-    statusbar.value = 750
+    statusbar.value = 2000
     statusbar.attachToSprite(ZombieBoss)
     statusbar.setColor(8, 10)
     ZombieBoss.follow(Player_2, 42)
@@ -1814,7 +1814,7 @@ info.onScore(8, function () {
 })
 function EnemySpawn () {
     SpawnLocation = tiles.getTilesByType(sprites.dungeon.floorMixed)
-    for (let index = 0; index < 5; index++) {
+    for (let index = 0; index < 12; index++) {
         EnemySprite = sprites.create(EnemyList._pickRandom(), SpriteKind.Enemy)
         tiles.placeOnTile(EnemySprite, SpawnLocation.removeAt(randint(0, SpawnLocation.length - 1)))
         TargetPlayer = TargetList._pickRandom()
