@@ -1,5 +1,8 @@
 namespace SpriteKind {
     export const OtherPlayer = SpriteKind.create()
+    export const Boss = SpriteKind.create()
+    export const MyProjectiles = SpriteKind.create()
+    export const BossProjectile = SpriteKind.create()
 }
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile1`, function (sprite, location) {
     game.gameOver(true)
@@ -106,6 +109,97 @@ info.onScore(11, function () {
 })
 sprites.onOverlap(SpriteKind.Enemy, SpriteKind.OtherPlayer, function (sprite, otherSprite) {
     info.player2.changeLifeBy(-1)
+})
+sprites.onOverlap(SpriteKind.MyProjectiles, SpriteKind.Enemy, function (sprite, otherSprite) {
+    sprites.destroy(otherSprite, effects.disintegrate, 500)
+    sprites.destroy(sprite, effects.ashes, 500)
+})
+sprites.onOverlap(SpriteKind.Boss, SpriteKind.Player, function (sprite, otherSprite) {
+    if (can_attack == 1) {
+        statusbar.value += -1
+    } else {
+        info.changeLifeBy(-2)
+    }
+})
+sprites.onOverlap(SpriteKind.Player, SpriteKind.BossProjectile, function (sprite, otherSprite) {
+    animation.runImageAnimation(
+    otherSprite,
+    [img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . 4 4 . . . . . . . 
+        . . . . . . 4 5 5 4 . . . . . . 
+        . . . . . . 2 5 5 2 . . . . . . 
+        . . . . . . . 2 2 . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `,img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . 4 . . . . . 
+        . . . . 2 . . . . 4 4 . . . . . 
+        . . . . 2 4 . . 4 5 4 . . . . . 
+        . . . . . 2 4 d 5 5 4 . . . . . 
+        . . . . . 2 5 5 5 5 4 . . . . . 
+        . . . . . . 2 5 5 5 5 4 . . . . 
+        . . . . . . 2 5 4 2 4 4 . . . . 
+        . . . . . . 4 4 . . 2 4 4 . . . 
+        . . . . . 4 4 . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `,img`
+        . 3 . . . . . . . . . . . 4 . . 
+        . 3 3 . . . . . . . . . 4 4 . . 
+        . 3 d 3 . . 4 4 . . 4 4 d 4 . . 
+        . . 3 5 3 4 5 5 4 4 d d 4 4 . . 
+        . . 3 d 5 d 1 1 d 5 5 d 4 4 . . 
+        . . 4 5 5 1 1 1 1 5 1 1 5 4 . . 
+        . 4 5 5 5 5 1 1 5 1 1 1 d 4 4 . 
+        . 4 d 5 1 1 5 5 5 1 1 1 5 5 4 . 
+        . 4 4 5 1 1 5 5 5 5 5 d 5 5 4 . 
+        . . 4 3 d 5 5 5 d 5 5 d d d 4 . 
+        . 4 5 5 d 5 5 5 d d d 5 5 4 . . 
+        . 4 5 5 d 3 5 d d 3 d 5 5 4 . . 
+        . 4 4 d d 4 d d d 4 3 d d 4 . . 
+        . . 4 5 4 4 4 4 4 4 4 4 4 . . . 
+        . 4 5 4 . . 4 4 4 . . . 4 4 . . 
+        . 4 4 . . . . . . . . . . 4 4 . 
+        `,img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . b b . b b b . . . . . 
+        . . . . b 1 1 b 1 1 1 b . . . . 
+        . . b b 3 1 1 d d 1 d d b b . . 
+        . b 1 1 d d b b b b b 1 1 b . . 
+        . b 1 1 1 b . . . . . b d d b . 
+        . . 3 d d b . . . . . b d 1 1 b 
+        . b 1 d 3 . . . . . . . b 1 1 b 
+        . b 1 1 b . . . . . . b b 1 d b 
+        . b 1 d b . . . . . . b d 3 d b 
+        . b b d d b . . . . b d d d b . 
+        . b d d d d b . b b 3 d d 3 b . 
+        . . b d d 3 3 b d 3 3 b b b . . 
+        . . . b b b d d d d d b . . . . 
+        . . . . . . b b b b b . . . . . 
+        `],
+    100,
+    false
+    )
+    info.changeLifeBy(-10)
+    timer.after(400, function () {
+        sprites.destroy(otherSprite, effects.ashes, 500)
+    })
 })
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (can_attack == 0) {
@@ -398,7 +492,9 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     }
 })
 controller.player2.onButtonEvent(ControllerButton.A, ControllerButtonEvent.Pressed, function () {
-    ChainBall = sprites.createProjectileFromSprite(assets.image`myImage`, Player_2, randint(-50, 50), randint(-50, 50))
+    ChainBall = sprites.create(assets.image`myImage`, SpriteKind.MyProjectiles)
+    ChainBall.setVelocity(randint(-50, 50), randint(-50, 50))
+    ChainBall.setPosition(Player_2.x, Player_2.y)
 })
 controller.player2.onButtonEvent(ControllerButton.Down, ControllerButtonEvent.Pressed, function () {
     animation.runImageAnimation(
@@ -735,8 +831,235 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     )
     Direction1 = 2
 })
+scene.onHitWall(SpriteKind.MyProjectiles, function (sprite, location) {
+    sprites.destroy(sprite)
+})
+scene.onHitWall(SpriteKind.BossProjectile, function (sprite, location) {
+    animation.runImageAnimation(
+    sprite,
+    [img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . 4 4 . . . . . . . 
+        . . . . . . 4 5 5 4 . . . . . . 
+        . . . . . . 2 5 5 2 . . . . . . 
+        . . . . . . . 2 2 . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `,img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . 4 . . . . . 
+        . . . . 2 . . . . 4 4 . . . . . 
+        . . . . 2 4 . . 4 5 4 . . . . . 
+        . . . . . 2 4 d 5 5 4 . . . . . 
+        . . . . . 2 5 5 5 5 4 . . . . . 
+        . . . . . . 2 5 5 5 5 4 . . . . 
+        . . . . . . 2 5 4 2 4 4 . . . . 
+        . . . . . . 4 4 . . 2 4 4 . . . 
+        . . . . . 4 4 . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `,img`
+        . 3 . . . . . . . . . . . 4 . . 
+        . 3 3 . . . . . . . . . 4 4 . . 
+        . 3 d 3 . . 4 4 . . 4 4 d 4 . . 
+        . . 3 5 3 4 5 5 4 4 d d 4 4 . . 
+        . . 3 d 5 d 1 1 d 5 5 d 4 4 . . 
+        . . 4 5 5 1 1 1 1 5 1 1 5 4 . . 
+        . 4 5 5 5 5 1 1 5 1 1 1 d 4 4 . 
+        . 4 d 5 1 1 5 5 5 1 1 1 5 5 4 . 
+        . 4 4 5 1 1 5 5 5 5 5 d 5 5 4 . 
+        . . 4 3 d 5 5 5 d 5 5 d d d 4 . 
+        . 4 5 5 d 5 5 5 d d d 5 5 4 . . 
+        . 4 5 5 d 3 5 d d 3 d 5 5 4 . . 
+        . 4 4 d d 4 d d d 4 3 d d 4 . . 
+        . . 4 5 4 4 4 4 4 4 4 4 4 . . . 
+        . 4 5 4 . . 4 4 4 . . . 4 4 . . 
+        . 4 4 . . . . . . . . . . 4 4 . 
+        `,img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . b b . b b b . . . . . 
+        . . . . b 1 1 b 1 1 1 b . . . . 
+        . . b b 3 1 1 d d 1 d d b b . . 
+        . b 1 1 d d b b b b b 1 1 b . . 
+        . b 1 1 1 b . . . . . b d d b . 
+        . . 3 d d b . . . . . b d 1 1 b 
+        . b 1 d 3 . . . . . . . b 1 1 b 
+        . b 1 1 b . . . . . . b b 1 d b 
+        . b 1 d b . . . . . . b d 3 d b 
+        . b b d d b . . . . b d d d b . 
+        . b d d d d b . b b 3 d d 3 b . 
+        . . b d d 3 3 b d 3 3 b b b . . 
+        . . . b b b d d d d d b . . . . 
+        . . . . . . b b b b b . . . . . 
+        `],
+    100,
+    false
+    )
+    timer.after(400, function () {
+        sprites.destroy(sprite, effects.ashes, 500)
+    })
+})
 info.onScore(10, function () {
     tiles.setCurrentTilemap(tilemap`level22`)
+    ZombieBoss = sprites.create(img`
+        ........855888888888.....
+        ........855888888888.....
+        ......88888888888888.....
+        ......ff66ff6666669f.....
+        ......f96ff96fff666f.....
+        .....fff6666f111f66f.....
+        ....f111f966f1f1f66f.....
+        ....f1f1f666f111f96f.....
+        ....f111f6666fff66f......
+        .....fff6666666666f......
+        ......f6121216666f.......
+        ......ff22222269f8f......
+        ........f121266f888f.....
+        .......ffffffff5588f.....
+        .......f88888f855f88f....
+        .......f88888f888f88f....
+        ......f88888ff8888f88f...
+        ......f88888f88888f88f...
+        .......f8888f888888f88f..
+        .......f8888f888888f88f..
+        .......f8888f888888f8ff..
+        ......f66fffddfff8f666f..
+        .....f66ff8888888f6f6f6..
+        .....f6ff888ffff8886f6...
+        ......f2e88f....f88fff...
+        ......fe12f.....f88f.....
+        ......f212f......f66f....
+        ......f212ff......f66f...
+        ......feeeeef.....fffef..
+        ......feeeeeef...feeeef..
+        ......feeeeeef..feeeef...
+        .......ffffff...fffff....
+        `, SpriteKind.Boss)
+    animation.runImageAnimation(
+    ZombieBoss,
+    [img`
+        ........855888888888.....
+        ........855888888888.....
+        ......88888888888888.....
+        ......ff66ff6666669f.....
+        ......f96ff96fff666f.....
+        .....fff6666f111f66f.....
+        ....f111f966f1f1f66f.....
+        ....f1f1f666f111f96f.....
+        ....f111f6666fff66f......
+        .....fff6666666666f......
+        ......f6121216666f.......
+        ......ff22222269f8f......
+        ........f121266f888f.....
+        .......ffffffff5588f.....
+        .......f88888f855f88f....
+        .......f88888f888f88f....
+        ......f88888ff8888f88f...
+        ......f88888f88888f88f...
+        .......f8888f888888f88f..
+        .......f8888f888888f88f..
+        .......f8888f888888f8ff..
+        ......f66fffddfff8f666f..
+        .....f66ff8888888f6f6f6..
+        .....f6ff888ffff8886f6...
+        ......f2e88f....f88fff...
+        ......fe12f.....f88f.....
+        ......f212f......f66f....
+        ......f212ff......f66f...
+        ......feeeeef.....fffef..
+        ......feeeeeef...feeeef..
+        ......feeeeeef..feeeef...
+        .......ffffff...fffff....
+        `,img`
+        ........855888888888.....
+        ........855888888888.....
+        ......88888888888888.....
+        ......ff66ff6666669f.....
+        ......f96ff96fff666f.....
+        .....fff6666f111f66f.....
+        ....f111f966f1f1f66f.....
+        ....f1f1f666f111f96f.....
+        ....f111f6666fff66f......
+        .....fff6666666666f......
+        ......f6121216666f.......
+        ......ff22222269f8f......
+        ........f121266f888f.....
+        .......ffffffff5588f.....
+        .......f88888f855f88f....
+        .......f88888f888f88f....
+        ......f88888ff8888f88f...
+        ......f88888f88888f88f...
+        .......f8888f888888f88f..
+        .......f8888f888888f88f..
+        .......f8888f888888f8ff..
+        ......f66fffddfff8f666f..
+        .....f66ff8888888f6f6f6..
+        .....f6ff888ffff8886f6...
+        ......f2e88f....f88fff...
+        .....fe122f.....f88f.....
+        ....f211ef.......f66f....
+        ....f212ff........f66f...
+        ....feeeeef.......fffef..
+        ....feeeeeef.....feeeef..
+        ....feeeeeef....feeeef...
+        .....ffffff.....fffff....
+        `,img`
+        ........855888888888.....
+        ........855888888888.....
+        ......88888888888888.....
+        ......ff66ff6666669f.....
+        ......f96ff96fff666f.....
+        .....fff6666f111f66f.....
+        ....f111f966f1f1f66f.....
+        ....f1f1f666f111f96f.....
+        ....f111f6666fff66f......
+        .....fff6666666666f......
+        ......f6121216666f.......
+        ......ff22222269f8f......
+        ........f121266f888f.....
+        .......ffffffff5588f.....
+        .......f88888f855f88f....
+        .......f88888f888f88f....
+        ......f88888ff8888f88f...
+        ......f88888f88888f88f...
+        .......f8888f888888f88f..
+        .......f8888f888888f88f..
+        .......f8888f888888f8ff..
+        ......f66fffddfff8f666f..
+        .....f66ff8888888f6f6f6..
+        .....f6ff888ffff8886f6...
+        ......f2e88f....f88fff...
+        .....fe122f....f88f......
+        ....f211ef.....f66f......
+        ....f212ff.....f66f......
+        ....feeeeef....ffff......
+        ....feeeeeef..feeeef.....
+        ....feeeeeef.feeeeef.....
+        .....ffffff..ffffff......
+        `],
+    200,
+    true
+    )
+    tiles.placeOnTile(ZombieBoss, tiles.getTileLocation(50, 50))
+    statusbar = statusbars.create(20, 4, StatusBarKind.Health)
+    statusbar.value = 750
+    statusbar.attachToSprite(ZombieBoss)
+    statusbar.setColor(8, 10)
+    ZombieBoss.follow(Player_2, 42)
 })
 controller.player2.onButtonEvent(ControllerButton.Up, ControllerButtonEvent.Pressed, function () {
     animation.runImageAnimation(
@@ -797,6 +1120,10 @@ controller.player2.onButtonEvent(ControllerButton.Up, ControllerButtonEvent.Pres
     true
     )
     Direction2 = 0
+})
+statusbars.onZero(StatusBarKind.Health, function (status) {
+    sprites.destroy(ZombieBoss, effects.blizzard, 500)
+    info.changeScoreBy(1)
 })
 info.onScore(7, function () {
     tiles.setCurrentTilemap(tilemap`level12`)
@@ -931,6 +1258,86 @@ sprites.onOverlap(SpriteKind.Enemy, SpriteKind.Player, function (sprite, otherSp
         info.changeLifeBy(-1)
     }
 })
+sprites.onOverlap(SpriteKind.OtherPlayer, SpriteKind.BossProjectile, function (sprite, otherSprite) {
+    animation.runImageAnimation(
+    otherSprite,
+    [img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . 4 4 . . . . . . . 
+        . . . . . . 4 5 5 4 . . . . . . 
+        . . . . . . 2 5 5 2 . . . . . . 
+        . . . . . . . 2 2 . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `,img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . 4 . . . . . 
+        . . . . 2 . . . . 4 4 . . . . . 
+        . . . . 2 4 . . 4 5 4 . . . . . 
+        . . . . . 2 4 d 5 5 4 . . . . . 
+        . . . . . 2 5 5 5 5 4 . . . . . 
+        . . . . . . 2 5 5 5 5 4 . . . . 
+        . . . . . . 2 5 4 2 4 4 . . . . 
+        . . . . . . 4 4 . . 2 4 4 . . . 
+        . . . . . 4 4 . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `,img`
+        . 3 . . . . . . . . . . . 4 . . 
+        . 3 3 . . . . . . . . . 4 4 . . 
+        . 3 d 3 . . 4 4 . . 4 4 d 4 . . 
+        . . 3 5 3 4 5 5 4 4 d d 4 4 . . 
+        . . 3 d 5 d 1 1 d 5 5 d 4 4 . . 
+        . . 4 5 5 1 1 1 1 5 1 1 5 4 . . 
+        . 4 5 5 5 5 1 1 5 1 1 1 d 4 4 . 
+        . 4 d 5 1 1 5 5 5 1 1 1 5 5 4 . 
+        . 4 4 5 1 1 5 5 5 5 5 d 5 5 4 . 
+        . . 4 3 d 5 5 5 d 5 5 d d d 4 . 
+        . 4 5 5 d 5 5 5 d d d 5 5 4 . . 
+        . 4 5 5 d 3 5 d d 3 d 5 5 4 . . 
+        . 4 4 d d 4 d d d 4 3 d d 4 . . 
+        . . 4 5 4 4 4 4 4 4 4 4 4 . . . 
+        . 4 5 4 . . 4 4 4 . . . 4 4 . . 
+        . 4 4 . . . . . . . . . . 4 4 . 
+        `,img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . b b . b b b . . . . . 
+        . . . . b 1 1 b 1 1 1 b . . . . 
+        . . b b 3 1 1 d d 1 d d b b . . 
+        . b 1 1 d d b b b b b 1 1 b . . 
+        . b 1 1 1 b . . . . . b d d b . 
+        . . 3 d d b . . . . . b d 1 1 b 
+        . b 1 d 3 . . . . . . . b 1 1 b 
+        . b 1 1 b . . . . . . b b 1 d b 
+        . b 1 d b . . . . . . b d 3 d b 
+        . b b d d b . . . . b d d d b . 
+        . b d d d d b . b b 3 d d 3 b . 
+        . . b d d 3 3 b d 3 3 b b b . . 
+        . . . b b b d d d d d b . . . . 
+        . . . . . . b b b b b . . . . . 
+        `],
+    100,
+    false
+    )
+    info.changeLifeBy(-10)
+    timer.after(400, function () {
+        sprites.destroy(otherSprite, effects.ashes, 500)
+    })
+})
 controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
     animation.runImageAnimation(
     Player_1,
@@ -1063,6 +1470,13 @@ controller.player2.onButtonEvent(ControllerButton.Left, ControllerButtonEvent.Pr
 })
 scene.onOverlapTile(SpriteKind.Enemy, assets.tile`transparency16`, function (sprite, location) {
     sprites.destroy(sprite)
+})
+sprites.onOverlap(SpriteKind.Boss, SpriteKind.OtherPlayer, function (sprite, otherSprite) {
+    info.player2.changeLifeBy(-1)
+})
+sprites.onOverlap(SpriteKind.MyProjectiles, SpriteKind.Boss, function (sprite, otherSprite) {
+    statusbar.value += -3
+    sprites.destroy(sprite, effects.ashes, 500)
 })
 function PowerUps () {
     Power_Up_1 = sprites.create(img`
@@ -1255,25 +1669,6 @@ function PowerUps () {
         . . . . . . . . . . . . . . . . 
         `, SpriteKind.Food)
     tiles.placeOnTile(Power_Up_10, tiles.getTileLocation(18, 62))
-    Power_Up_11 = sprites.create(img`
-        . . . . . . . . . . . . . . . . 
-        . . . . . . 6 6 6 6 . . . . . . 
-        . . . . 6 6 6 5 5 6 6 6 . . . . 
-        . . . 7 7 7 7 6 6 6 6 6 6 . . . 
-        . . 6 7 7 7 7 8 8 8 1 1 6 6 . . 
-        . . 7 7 7 7 7 8 8 8 1 1 5 6 . . 
-        . 6 7 7 7 7 8 8 8 8 8 5 5 6 6 . 
-        . 6 7 7 7 8 8 8 6 6 6 6 5 6 6 . 
-        . 6 6 7 7 8 8 6 6 6 6 6 6 6 6 . 
-        . 6 8 7 7 8 8 6 6 6 6 6 6 6 6 . 
-        . . 6 8 7 7 8 6 6 6 6 6 8 6 . . 
-        . . 6 8 8 7 8 8 6 6 6 8 6 6 . . 
-        . . . 6 8 8 8 8 8 8 8 8 6 . . . 
-        . . . . 6 6 8 8 8 8 6 6 . . . . 
-        . . . . . . 6 6 6 6 . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        `, SpriteKind.Food)
-    tiles.placeOnTile(Power_Up_11, tiles.getTileLocation(52, 52))
 }
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSprite) {
     ListValue = list._pickRandom()
@@ -1316,6 +1711,38 @@ info.player2.onLifeZero(function () {
     sprites.destroy(Player_2, effects.ashes, 500)
     game.gameOver(false)
 })
+function ZombieBossShoot (zombieBoss: Sprite) {
+    if (true) {
+        ShootInterval = 1000
+        Gametime = game.runtime()
+        if (Gametime - PreviousShot >= ShootInterval) {
+            PreviousShot = Gametime
+            speed = 50
+            BossProjectile = sprites.create(img`
+                . . . . . . . e e e e e . . . . 
+                . . . . . e e 2 2 2 2 2 e . . . 
+                . . . . e e 2 2 2 2 2 2 2 e . . 
+                . . . . e 9 4 2 2 2 2 2 4 b e . 
+                . . e e 9 9 4 4 2 2 2 2 4 9 b e 
+                . e 2 2 9 9 4 4 4 2 2 2 4 9 9 e 
+                e 2 2 2 9 9 2 4 4 4 4 4 2 9 9 e 
+                e 2 2 2 9 9 e e e e e e e 9 9 e 
+                e 2 2 2 9 b e b b b e b e b 9 e 
+                e 2 e e e e b b b b e b b e b e 
+                e e 3 3 e e 2 2 2 2 e 2 2 e e e 
+                e 3 3 e e e e e e e e e e e e e 
+                e e e e e e e e e e e e e e e e 
+                e e e e f f f e e e e f f f e e 
+                . e e f b c c f e e f b c c f . 
+                . . . . b b f . . . . b b f . . 
+                `, SpriteKind.BossProjectile)
+            BossProjectile.setVelocity(speed, 0)
+            BossProjectile.setPosition(ZombieBoss.x, ZombieBoss.y)
+            Angle = Math.atan2(Player_1.y - zombieBoss.y, Player_1.x - zombieBoss.x)
+            BossProjectile.setVelocity(speed * Math.cos(Angle), speed * Math.sin(Angle))
+        }
+    }
+}
 scene.onOverlapTile(SpriteKind.Player, assets.tile`transparency16`, function (sprite, location) {
     info.setLife(0)
 })
@@ -1324,9 +1751,6 @@ info.onScore(5, function () {
 })
 info.onScore(8, function () {
     tiles.setCurrentTilemap(tilemap`level14`)
-})
-sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, otherSprite) {
-    sprites.destroy(otherSprite)
 })
 function EnemySpawn () {
     SpawnLocation = tiles.getTilesByType(sprites.dungeon.floorMixed)
@@ -1344,7 +1768,12 @@ function EnemySpawn () {
 let TargetPlayer = 0
 let EnemySprite: Sprite = null
 let SpawnLocation: tiles.Location[] = []
-let Power_Up_11: Sprite = null
+let Angle = 0
+let BossProjectile: Sprite = null
+let speed = 0
+let PreviousShot = 0
+let Gametime = 0
+let ShootInterval = 0
 let Power_Up_10: Sprite = null
 let Power_Up_9: Sprite = null
 let Power_Up_8: Sprite = null
@@ -1355,10 +1784,12 @@ let Power_Up_4: Sprite = null
 let Power_Up_3: Sprite = null
 let Power_Up_2: Sprite = null
 let Power_Up_1: Sprite = null
+let ZombieBoss: Sprite = null
 let moving2 = false
 let moving = false
 let Direction2 = 0
 let ChainBall: Sprite = null
+let statusbar: StatusBarSprite = null
 let Direction1 = 0
 let ListValue = 0
 let can_attack = 0
@@ -1522,6 +1953,9 @@ TargetList = [1, 2]
 can_attack = 0
 game.onUpdate(function () {
     Animation()
+    if (sprites.allOfKind(SpriteKind.Boss).length > 0) {
+        ZombieBossShoot(ZombieBoss)
+    }
 })
 game.onUpdateInterval(5000, function () {
     EnemySpawn()
