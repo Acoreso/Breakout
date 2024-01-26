@@ -494,6 +494,63 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
 controller.player2.onButtonEvent(ControllerButton.A, ControllerButtonEvent.Pressed, function () {
     if (game.runtime() - prevPress >= TimeBetweenPress) {
         ChainBall = sprites.create(assets.image`myImage`, SpriteKind.MyProjectiles)
+        animation.runImageAnimation(
+        ChainBall,
+        [img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . f f f f . . . . 
+            . . . . . . . f f f f f f . . . 
+            . . . . . . f f f f f f f f . . 
+            . . . . . f f f f f f f f f f . 
+            6 . 6 . 6 f f f f f f f f f f . 
+            . 6 . 6 . f f f f f f f f f f . 
+            6 . 6 . 6 f f f f f f f f f f . 
+            . . . . . f f f f f f f f f f . 
+            . . . . . . f f f f f f f f . . 
+            . . . . . . . f f f f f f . . . 
+            . . . . . . . . f f f f . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `,img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . f f f f . . . . 
+            . . . . . . . f f f f f f . . . 
+            . . . . . . f f f f f f f f . . 
+            . . . . . f f f f f f f f f f . 
+            . . . . 6 f f f f f f f f f f . 
+            . . . 6 . f f f f f f f f f f . 
+            . . 6 . 6 f f f f f f f f f f . 
+            . 6 . 6 . f f f f f f f f f f . 
+            6 . 6 . . . f f f f f f f f . . 
+            6 6 . . . . . f f f f f f . . . 
+            . . . . . . . . f f f f . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `,img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . f f f f . . . . 
+            6 6 . . . . . f f f f f f . . . 
+            6 . 6 . . . f f f f f f f f . . 
+            . 6 . 6 . f f f f f f f f f f . 
+            . . 6 . 6 f f f f f f f f f f . 
+            . . . 6 . f f f f f f f f f f . 
+            . . . . 6 f f f f f f f f f f . 
+            . . . . . f f f f f f f f f f . 
+            . . . . . . f f f f f f f f . . 
+            . . . . . . . f f f f f f . . . 
+            . . . . . . . . f f f f . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `],
+        100,
+        true
+        )
         ChainBall.setVelocity(randint(-50, 50), randint(-50, 50))
         ChainBall.setPosition(Player_2.x, Player_2.y)
         prevPress = game.runtime()
