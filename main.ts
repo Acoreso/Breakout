@@ -1772,35 +1772,33 @@ info.player2.onLifeZero(function () {
     game.gameOver(false)
 })
 function ZombieBossShoot (zombieBoss: Sprite) {
-    if (true) {
-        ShootInterval = 1000
-        Gametime = game.runtime()
-        if (Gametime - PreviousShot >= ShootInterval) {
-            PreviousShot = Gametime
-            speed = 50
-            BossProjectile2 = sprites.create(img`
-                . . . . . . . e e e e e . . . . 
-                . . . . . e e 2 2 2 2 2 e . . . 
-                . . . . e e 2 2 2 2 2 2 2 e . . 
-                . . . . e 9 4 2 2 2 2 2 4 b e . 
-                . . e e 9 9 4 4 2 2 2 2 4 9 b e 
-                . e 2 2 9 9 4 4 4 2 2 2 4 9 9 e 
-                e 2 2 2 9 9 2 4 4 4 4 4 2 9 9 e 
-                e 2 2 2 9 9 e e e e e e e 9 9 e 
-                e 2 2 2 9 b e b b b e b e b 9 e 
-                e 2 e e e e b b b b e b b e b e 
-                e e 3 3 e e 2 2 2 2 e 2 2 e e e 
-                e 3 3 e e e e e e e e e e e e e 
-                e e e e e e e e e e e e e e e e 
-                e e e e f f f e e e e f f f e e 
-                . e e f b c c f e e f b c c f . 
-                . . . . b b f . . . . b b f . . 
-                `, SpriteKind.BossProjectile)
-            BossProjectile2.setVelocity(speed, 0)
-            BossProjectile2.setPosition(ZombieBoss.x, ZombieBoss.y)
-            Angle = Math.atan2(Player_1.y - zombieBoss.y, Player_1.x - zombieBoss.x)
-            BossProjectile2.setVelocity(speed * Math.cos(Angle), speed * Math.sin(Angle))
-        }
+    ShootInterval = 1000
+    Gametime = game.runtime()
+    if (Gametime - PreviousShot >= ShootInterval) {
+        PreviousShot = Gametime
+        speed = 50
+        BossProjectile2 = sprites.create(img`
+            . . . . . . . e e e e e . . . . 
+            . . . . . e e 2 2 2 2 2 e . . . 
+            . . . . e e 2 2 2 2 2 2 2 e . . 
+            . . . . e 9 4 2 2 2 2 2 4 b e . 
+            . . e e 9 9 4 4 2 2 2 2 4 9 b e 
+            . e 2 2 9 9 4 4 4 2 2 2 4 9 9 e 
+            e 2 2 2 9 9 2 4 4 4 4 4 2 9 9 e 
+            e 2 2 2 9 9 e e e e e e e 9 9 e 
+            e 2 2 2 9 b e b b b e b e b 9 e 
+            e 2 e e e e b b b b e b b e b e 
+            e e 3 3 e e 2 2 2 2 e 2 2 e e e 
+            e 3 3 e e e e e e e e e e e e e 
+            e e e e e e e e e e e e e e e e 
+            e e e e f f f e e e e f f f e e 
+            . e e f b c c f e e f b c c f . 
+            . . . . b b f . . . . b b f . . 
+            `, SpriteKind.BossProjectile)
+        BossProjectile2.setVelocity(speed, 0)
+        BossProjectile2.setPosition(ZombieBoss.x, ZombieBoss.y)
+        Angle = Math.atan2(Player_1.y - zombieBoss.y, Player_1.x - zombieBoss.x)
+        BossProjectile2.setVelocity(speed * Math.cos(Angle), speed * Math.sin(Angle))
     }
 }
 scene.onOverlapTile(SpriteKind.Player, assets.tile`transparency16`, function (sprite, location) {
@@ -1812,9 +1810,9 @@ info.onScore(5, function () {
 info.onScore(8, function () {
     tiles.setCurrentTilemap(tilemap`level14`)
 })
-function EnemySpawn () {
+function EnemySpawn (num: number) {
     SpawnLocation = tiles.getTilesByType(sprites.dungeon.floorMixed)
-    for (let index = 0; index < 12; index++) {
+    for (let index = 0; index < num; index++) {
         EnemySprite = sprites.create(EnemyList._pickRandom(), SpriteKind.Enemy)
         tiles.placeOnTile(EnemySprite, SpawnLocation.removeAt(randint(0, SpawnLocation.length - 1)))
         TargetPlayer = TargetList._pickRandom()
@@ -2022,5 +2020,5 @@ game.onUpdate(function () {
     }
 })
 game.onUpdateInterval(5000, function () {
-    EnemySpawn()
+    EnemySpawn(randint(5, 10))
 })
