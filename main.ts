@@ -2013,6 +2013,7 @@ TargetList = [1, 2]
 can_attack = 0
 prevPress = 0
 TimeBetweenPress = 200
+info.player2.setScore(0)
 game.onUpdate(function () {
     Animation()
     if (sprites.allOfKind(SpriteKind.Boss).length > 0) {
@@ -2021,4 +2022,7 @@ game.onUpdate(function () {
 })
 game.onUpdateInterval(5000, function () {
     EnemySpawn(randint(5, 10))
+})
+game.onUpdateInterval(1000, function () {
+    info.player2.changeScoreBy(1)
 })
