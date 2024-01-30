@@ -1116,7 +1116,7 @@ info.onScore(10, function () {
     )
     tiles.placeOnTile(ZombieBoss, tiles.getTileLocation(50, 50))
     statusbar = statusbars.create(20, 4, StatusBarKind.Health)
-    statusbar.value = 2000
+    statusbar.value = 5000
     statusbar.attachToSprite(ZombieBoss)
     statusbar.setColor(8, 10)
     ZombieBoss.follow(Player_2, 42)
